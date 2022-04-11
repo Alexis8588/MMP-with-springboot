@@ -1,0 +1,33 @@
+# 서버
+server:
+  port: 8091
+
+# DB 접속 정보
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver #mysql 쓰기 위해서 명명 하는 것.
+    url: jdbc:mysql://localhost:3306/moneymanager?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    #                           host 데이터베이스               기준시간                       인코딩   UTF-8
+    username: moneymanager
+    password: 1234
+  thymeleaf:
+    cache: false # 캐쉬를 누적하지 않는다 라는 뜻.
+
+  # JPA 관련 설정
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect # mysql의 엔진을 쓴다 라는 개념.
+    show-sql: true
+    hibernate:
+      ddl-auto: create # ?? 이게 뭔데? ddl : data definition language?
+  servlet:
+    multipart:
+      max-file-size: 20MB # 최대 파일 사이즈 20MB
+      max-request-size: 40MB # 최대 요청 사이즈 40MB
+
+# ddl dml dcl임
+# ERD : entity relation diagram -> entity의 경우 mysql에서는 table의 의미로 사용함.
+
+#      create: SessionFactory가 올라갈 때 테이블을 지우고 새로 만듬. (sql문을 별도로 만들어서 데이터를 넣는 용도로도 사용가능하다.)
+#      create-drop: create와 동일하지만, SessionFactory가 내려가면 해당 테이블을 drop시킨다.
+#      update: SessionFactory가 올라갈 때 Object를 검사하여 테이블을 alter 시킨다. 데이터는 유지됨.
+#      validate: update처럼 Object를 검사하지만, 스키마는 아무것도 건드리지 않고, Object와 스키마의 정보가 다르다면 에러를 발생시킨다.

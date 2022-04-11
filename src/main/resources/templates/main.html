@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Money Manager</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<header> <!-- 전체적으로 하단의 footer와는 사이즈가 안맞기 때문에 해당 값에 대한 조정이 필요할 것으로 보임. -->
+    <div>
+        <!-- 첫 화면으로 돌아가기? -->
+        <a th:href="@{/main}">메인으로 돌아가기</a> <!-- 해당 부분을 누르면 모든 데이터가 보내지는 것이 아닌지? 그렇다면은.... 로그인에 따른 값이 변경될 수 있게 링크를 설정해줘야 함. -->
+    </div>
+    <div> <!-- 맨 위의 간단하게 표시된 어떤 항목들 -->
+        <!-- 관리자 계정으로 접근시 보일 수 있는 전체 목록 메뉴 만듥 -->
+        <div th:if="${session['loginEmail'] eq 'admin'}">
+            <!-- th:if="${#string.equals('loginEmail', admin}" -->
+            <a href="/member">전체 회원 목록</a>
+        </div>
+        <!-- 어떻게 해야 할 수 있을까? -->
+        로그인 : <a th:text="${session['loginNickName']}"></a>
+        <a href="/member/logout">로그아웃</a>
+        <a href="/member/detail">조회</a>
+
+    </div>
+    <div> <!-- 위에 한개의 바로 바로바로 불러올 수 있게 설정하기 -->
+        분류 표시의 정보가 들어 갈 곳
+        <a href="/notice/">공지사항</a>
+        <a href="/cash/">현금</a>
+        <a href="/bank/">계좌</a>
+        <a href="/card/">카드</a>
+        <a href="/board/">게시판</a>
+        <a>쇼핑몰</a>
+        <a>그 외</a>
+
+        <!-- 위에 있는 것을 그대로 아래에다가 붙여둘 예정임. -->
+        <div class="text-end">
+            <!-- d-flex : 일자로 표현되게 해줌 -->
+            <!-- 입력 및 가입 로그인 항목 -->
+            <div class="d-flex">
+                <input type="text" class="form-control" placeholder="Search">
+                <button class="btn btn-link text-light text-decoration-none flex-shrink-0" onclick="location.href='member/login'">Sign in</button>
+                <!-- flex-shrink-0 : 아웃라인 찌그러지지않게 자동으로 맞춰주는 것.? -->
+                <button class="btn btn-outline-light flex-shrink-0" onclick="location.href='member/save'">Sign up</button>
+            </div>
+        </div>
+        <div class="container d-flex align-items-center py-3">
+            <!-- data-bs-toggle="offcanvas" : 메뉴가 스르륵 나타나는 소석을 이야기 함 -->
+            <!-- data-bs-target="#offcanvas" : offcanvas에서 보여줄 내용(id가 offcanvas로 지정된 요소를 보여주겠다.) -->
+            <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvas">
+                <!-- svg : 벡터 그래픽 이미지 . 안깨지는게 장점 -->
+                <!-- 햄버거 모양 이미지 -->
+                <img src="./images/menu.svg" alt="">
+            </button>
+            <!-- 옆에 추가창에 대한 내용 추가 -->
+            <div class="offcanvas offcanvas-start" id="offcanvas">
+                <div class="offcanvas-header">
+                    <button class="btn-close" data-bs-dismiss="offcanvas">
+                        <!-- 버튼 닫기 누르면 offcanvas를 닫는다 라는 의미 -->
+                    </button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="/notice/">
+                                공지사항
+                            </a>
+                        </li>
+                        <!-- <div>
+                            <ul>
+                                <li>나</li>
+                                <a onclick="clickcr(this,'ctw.catlist','','',event);" id="category14" href="/PostList.naver?blogId=iskaid&amp;from=postList&amp;categoryNo=14&amp;parentCategoryNo=14 " class="itemfont cm-col1 _selectCurrentCategory _param(1000013777|13317|widget_category|14) on">취미</a>
+                                <li>너</li>
+                            </ul>
+                        </div> -->
+                        <!-- 원래 -->
+                        <li class="list-group-item">
+                            <a href="/cash/">
+                                현금
+                            </a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="/bank/">
+                                계좌
+                            </a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="/card/">
+                                카드
+                            </a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="/board/">
+                                게시판
+                            </a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="/shop/">
+                                쇼핑
+                            </a>
+                        </li>
+                    </ul>
+                    <input type="text" class="form-control mb-2" placeholder="Search">
+                    <!-- d-grid : 한줄에 채워서 표시 가능 -->
+                    <div class="d-grid mb-2">
+                        <button class="btn btn-outline-primary" onclick="location.href='member/login'">Sign in</button>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary" onclick="location.href='member/save'">Sign up</button>
+                    </div>
+                </div>
+            </div>
+            <!-- css에서 주어진 class 설정 -->
+            <!-- 4개 메뉴에 대한 항목 -->
+            <ul class="nav flex-grow-1">
+                <li class="list-group-item">
+                    <a href="/notice/">
+                        공지사항
+                    </a>
+                </li>
+
+                <li class="list-group-item">
+                    <a href="/cash/">
+                        현금
+                    </a>
+                </li>
+
+                <li class="list-group-item">
+                    <a href="/bank/">
+                        계좌
+                    </a>
+                </li>
+
+                <li class="list-group-item">
+                    <a href="/card/">
+                        카드
+                    </a>
+                </li>
+
+                <li class="list-group-item">
+                    <a href="/board/">
+                        게시판
+                    </a>
+                </li>
+
+                <li class="list-group-item">
+                    <a href="/shop/">
+                        쇼핑
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="row">
+        <div class="col-1">
+
+        </div>
+        <div class="col-10">
+            <div class="text-end"> <!-- 데이터를 저장할 수 있는 가장 큰 선택지를 만들어야 함. -->
+        <!--        <a href="/select">+</a> &lt;!&ndash; 어떤걸 생성하게 해야하는가? &ndash;&gt;-->
+                <div id="update">
+                    <Select id="check" name="search"> <!-- 선택 조회 관련? -->
+                        <option disabled>선택하세요</option>
+                        <option id="cash" value="cash">현금</option>
+                        <option id="bank" value="bank">계좌</option>
+                        <option id="card" value="card">카드</option>
+                    </Select>
+                    <button onclick="transData()" id="moveToData">선택</button>
+                </div>
+            </div>
+            main page 관련 정보가 들어갈 곳
+            <div th:if="${session['loginNickName'] eq 'admin'}">
+                <div>
+                    회원 정보
+                </div>
+                <!-- 음.... 어떻게 회원을 적어야 하는가. -->
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>이름</th>
+                            <th>아이디</th>
+                            <th>닉네임</th>
+                            <th>비밀번호</th>
+                            <th>전화번호</th>
+                            <th>메모</th>
+                            <th>이미지</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="m: ${memberList}">
+                            <td th:text="${m.memberId}">번호</td>
+                            <td th:text="${m.memberName}">이름</td>
+                            <td th:text="${m.memberNickName}">닉네임</td>
+                            <td th:text="${m.memberEmail}">아이디</td>
+                            <td th:text="${m.memberPassword}">비밀번호</td>
+                            <td th:text="${m.memberPhone}">전화번호</td>
+                            <td th:text="${m.memberMemo}">메모</td>
+                            <td th:text="${m.memberPhotoName}">
+                                <img src="" alt="">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row"> <!-- 3번째 분류 칸 --> <!-- 카드? (데빛 앤 크래딧? 아니면 그걸 한번에 표시? -->
+                <div class="col-6">
+                    <div>
+                        공지사항
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>조회수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="no : ${nList}">
+                                <td th:text="${no.noticeId}">번호</td>
+                                <td th:href="@{|/notice/${no.noticeId}|}">제목</td>
+                                <td th:text="${no.noticeWriter}">작성자</td>
+                                <td th:text="${no.noticeHits}">조회수</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-6">
+                    <div>
+                        게시판
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>조회수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="bd : ${bdList}">
+                                <td th:text="${bd.boardId}">번호</td>
+                                <td th:href="@{|/board/${bd.boardId}|}">제목</td>
+                                <td th:text="${bd.boardWriter}">작성자</td>
+                                <td th:text="${bd.boardHits}">조회수</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row"> <!-- 첫번째 분류 칸 --> <!-- 공지 및 게시판 -->
+                <div class="row">
+                    <!-- 공지 사항 간련 건이 표시되는 것. -->
+                </div>
+                <div class="row"> <!-- 위의 두칸읆 만들기 위한것. -->
+                    <div class="col-6">
+                        <div>
+                            현금 관련 정보를 보여주는 곳
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>현금명</th>
+                                    <th>총 자산</th>
+                                    <th>메모</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ca: ${csList}">
+                                    <td th:text="${ca.cashId}">번호</td>
+                                    <td th:text="${ca.cashName}">현금명</td>
+                                    <td th:text="${ca.totalAsset}">총 자산</td>
+                                    <td th:text="${ca.cashMemo}">메모</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            은행 관련 정보를 보여주는 곳
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>계좌 등록 순서</th> <!-- 필요한지 -->
+                                    <th>계좌 명</th>
+                                    <th>메모</th> <!-- 필요하다면 -->
+                                    <th>총 잔액</th>
+                                </tr>
+                            </thead>
+                            <tbody> <!-- 해당 부분에 대한 추가 수정 필요 함 - 완료되면 이부분은 지울 예정 -->
+                                <tr th:each="bd: ${bList}">
+                                    <td th:text="${bd.bankName}">계좌 명</td>
+                                    <td th:text="${bd.bankMemo}">계좌 메모</td>
+                                    <td th:text="${bd.totalAsset}">총 잔액</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row"> <!-- 두번째 분류 칸 --> <!-- 현금 및 은행? -->
+                <div class="row">
+                    <div class="col-6">
+                        <div>
+                            카드 관련 정보를 보여주는 곳
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>카드명</th>
+                                    <th>사용액</th>
+                                    <th>메모</th>
+                                    <th>이미지</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cr : ${crList}"> <!-- 번호는 1부터 자동 매김 되도록 설정 하기 -->
+                                    <td th:text="*{cr.cardId}">번호</td>
+                                    <td th:text="*{cr.cardName}">카드명</td>
+                                    <td th:text="*{cr.totalAsset}">사용액</td>
+                                    <td th:text="*{cr.cardMemo}">메모</td>
+                                    <th th:text="*{cr.cardPhotoName}">이미지</td> <!-- 이미지가 있으면 아이콘으로 표시하기 -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            막대 그래프용?
+                        </div>
+                        <table>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div>
+                            신용카드
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>카드명</th>
+                                    <th>카드종류</th>
+                                    <th>총 사용액</th>
+                                    <th>메모</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cd: ${cdlist}">
+                                    <td th:value="*{cd.creditId}">번호</td>
+                                    <td th:value="*{cd.creditName}">내역</td>
+                                    <td th:value="*{cd.bankId}">연결은행</td> <!-- 연결 방법 확인 필요 -->
+                                    <td th:value="*{cd.minusAsset}">총 사용액</td>
+                                    <td th:value="*{cd.creditMemo}">메모</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            체크카드
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr> <!-- 시간에 따라서 나가는 날이 설정되게 하는거... 어떻게 해야할까? -->
+                                    <th>번호</th>
+                                    <th>카드명</th>
+                                    <th>사용액</th>
+                                    <th>할인액</th>
+                                    <th>메모</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="de : ${dblist}">
+                                    <td th:value="${de.debitId}">번호</td>
+                                    <td th:value="${de.debitName}">내역</td>
+                                    <td th:value="${de.minusAsset}">사용액</td>
+                                    <td>할인액</td>
+                                    <td th:value="${de.debitMemo}">메모</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row"> <!-- 3번째 분류 칸 --> <!-- 카드? (데빛 앤 크래딧? 아니면 그걸 한번에 표시? -->
+                <div>
+                    그래프?
+                </div>
+            </div>
+            <div class="row"> <!-- 4번째 분류 칸 --> <!-- 그래프로 표시하기? 아니면? -->
+                <div>
+                    그래프2?
+                </div>
+            </div>
+            </div>
+        <div class="col-1">
+
+        </div>
+    </div>
+</main>
+<footer>
+    <!-- 해당 부분 전체적으로 수정해야함. 아에 안맞음. -->
+    <div class="container bg-light">
+        <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                    <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+                </a>
+                <span class="text-muted">&copy; 2022 - Now</span>
+            </div>
+            <!-- ul : 순서가 필요 없는 목록 (unordered list)-->
+            <!-- li : ul을 사용할 때 목록을 만들기 위한 태그 (list item) -->
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <!-- 팝업 창을 띄우기 위해서 하는것 부트 스트랩의 툴팁 -->
+                <li class="ms-3"><a onclick="href='https://github.com/'" class="text-muted" href="#" title="Github">
+                    <!-- 아이콘관련 태그 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                    </svg></a></li>
+                <li class="ms-3"><a onclick="href='이메일 어떻게 쓰게 하지?'" class="text-muted" href="#" title="E-mail">
+                    <!-- 아이콘관련 태그 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+                    </svg></a></li>
+                <li class="ms-3"><a onclick="href='내가 앱만들면 거기 사이트로 이동'" class="text-muted" href="#" title="App">
+                    <!-- 자작앱 아이콘 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-app" viewBox="0 0 16 16">
+                        <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
+                    </svg></a></li>
+                <li class="ms-3"><a onclick="href='https://blog.naver.com/iskaid'" class="text-muted" href="#" title="Blog">
+                    <!-- 아이콘관련 태그 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+                        <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
+                    </svg></a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+</body>
+<script>
+    function transData() {
+        const cash = document.getElementById('cash');
+        const card = document.getElementById('card');
+        const bank = document.getElementById('bank');
+
+        const check = document.getElementById('check');
+        if (check == cash) {
+            update.submit(); // 이게 맞나?
+        } else if (check == card) {
+
+        } else if (check == bank) {
+
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Money Manager</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+</head>
+<body>
+<header>
+
+</header>
+<section>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <form action="/member/save" method="post" enctype="multipart/form-data" th:object="${msave}">
+                <input type="email" th:field="*{memberEmail}" placeholder="가입하실 이메일을 입력하세요">@
+                <select id="emailCheck">
+                    <option disabled>선택하세요</option>
+                    <option value="gmail.com">gamil.com</option>
+                    <option value="kakao.com">kakao.com</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="hanmail.net">hanmail.net</option>
+                    <option id="typing">직접입력</option> <input type="hidden">
+                </select> <br>
+                <input type="password" th:field="*{memberPassword}" placeholder="사용할 비밀번호를 입력하세요"> <br>
+                <input type="password" id="pwCheck" placeholder="비밀번호를 다시 입력해주세요"> <br>
+                <input type="text" th:field="*{memberName}" placeholder="이름을 입력하세요"> <br>
+                <input type="text" th:field="*{memberNickName}" placeholder="닉네임을 입력하세요"> <br>
+                <input type="tel" th:field="*{memberPhone}" placeholder="000-0000-0000"> <br>
+                <textarea rows="5" th:field="*{memberMemo}"></textarea> <br>
+                <input type="file" th:field="*{memberPhoto}" value="저장"> <br><!-- 파일 관련 설정 -->
+                <input type="submit" value="회원가입">
+            </form>
+        </div>
+        <div class="col-1"></div>
+    </div>
+</section>
+<footer>
+    <!-- 해당 부분 전체적으로 수정해야함. 아에 안맞음. -->
+    <div class="container bg-light">
+        <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                    <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+                </a>
+                <span class="text-muted">&copy; 2022 - Now</span>
+            </div>
+            <!-- ul : 순서가 필요 없는 목록 (unordered list)-->
+            <!-- li : ul을 사용할 때 목록을 만들기 위한 태그 (list item) -->
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <!-- 팝업 창을 띄우기 위해서 하는것 부트 스트랩의 툴팁 -->
+                <li class="ms-3"><a onclick="href='https://github.com/'" class="text-muted" href="#" title="Github">
+                    <!-- 아이콘관련 태그 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                    </svg></a></li>
+                <li class="ms-3"><a onclick="href='이메일 어떻게 쓰게 하지?'" class="text-muted" href="#" title="E-mail">
+                    <!-- 아이콘관련 태그 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+                    </svg></a></li>
+                <li class="ms-3"><a onclick="href='내가 앱만들면 거기 사이트로 이동'" class="text-muted" href="#" title="App">
+                    <!-- 자작앱 아이콘 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-app" viewBox="0 0 16 16">
+                        <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
+                    </svg></a></li>
+                <li class="ms-3"><a onclick="href='https://blog.naver.com/iskaid'" class="text-muted" href="#" title="Blog">
+                    <!-- 아이콘관련 태그 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+                        <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
+                    </svg></a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
